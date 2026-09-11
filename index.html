@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WealthPay — Payment infrastructure for modern businesses</title>
+<meta name="description" content="WealthPay is a payment processor built for scale. Accept cards, wallets and local payment methods through one API, with intelligent routing, built-in anti-fraud and fast settlement.">
+<meta name="theme-color" content="#0C0E0C">
+<link rel="canonical" href="https://wealthpay.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WealthPay — Payment infrastructure for modern businesses">
+<meta property="og:description" content="One API for cards, wallets and local payment methods. Intelligent routing, anti-fraud and fast settlement.">
+<meta property="og:url" content="https://wealthpay.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" sizes="any" href="assets/img/wealthpay-icon-dark.svg">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="mask-icon" href="assets/img/wealthpay-symbol.svg" color="#B5F725">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+<!-- ============ icon sprite ============ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.2 5.2L20 7"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.6l7.6 3v6c0 4.7-3.1 8.4-7.6 9.8-4.5-1.4-7.6-5.1-7.6-9.8v-6l7.6-3Z"/><path d="M9 12l2.2 2.2L15.4 10"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4M12 2.8c2.4 2.6 3.7 5.8 3.7 9.2s-1.3 6.6-3.7 9.2c-2.4-2.6-3.7-5.8-3.7-9.2S9.6 5.4 12 2.8Z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 2.5L4.8 13.4h6.1l-.9 8.1 8.8-11.2h-6.3l.7-7.8Z"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.4" y="4.8" width="19.2" height="14.4" rx="3"/><path d="M2.4 9.8h19.2M6 15.4h4"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 9.4A8.6 8.6 0 0 1 19 7.4M20.4 14.6A8.6 8.6 0 0 1 5 16.6"/><path d="M18.4 3.4v4.2h-4.2M5.6 20.6v-4.2h4.2"/></symbol>
+    <symbol id="i-split" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.4" cy="12" r="2.6"/><circle cx="18.6" cy="5.6" r="2.6"/><circle cx="18.6" cy="18.4" r="2.6"/><path d="M7.8 10.8l8.4-4.1M7.8 13.2l8.4 4.1"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 7.6A2.6 2.6 0 0 1 5.8 5h11.6a2.6 2.6 0 0 1 2.6 2.6v9.2a2.6 2.6 0 0 1-2.6 2.6H5.8a2.6 2.6 0 0 1-2.6-2.6V7.6Z"/><path d="M16.2 12.2h4.6"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6 8.2L4.4 12l4.2 3.8M15.4 8.2L19.6 12l-4.2 3.8M13.4 4.6l-2.8 14.8"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a3.8 3.8 0 0 0 5.4 0l3-3a3.8 3.8 0 0 0-5.4-5.4l-1.5 1.5"/><path d="M13.8 10.2a3.8 3.8 0 0 0-5.4 0l-3 3a3.8 3.8 0 0 0 5.4 5.4l1.5-1.5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.4V4M4 19.4h16"/><path d="M7.8 15.6V11M12 15.6V7.4M16.2 15.6v-6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="10.4" width="14.8" height="10.2" rx="2.6"/><path d="M8.2 10.4V7.8a3.8 3.8 0 0 1 7.6 0v2.6"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2l8.6 4.6-8.6 4.6L3.4 7.8 12 3.2Z"/><path d="M3.4 12.4L12 17l8.6-4.6M3.4 16.8L12 21.4l8.6-4.6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6.8V12l3.4 2.2"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8.6" y="8.6" width="11.8" height="11.8" rx="2.4"/><path d="M15.4 5.4H6a2.6 2.6 0 0 0-2.6 2.6v9.4"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.6" width="18" height="14.8" rx="2.6"/><circle cx="8.6" cy="10" r="1.6"/><path d="M3.6 17.6l5.2-5 4.4 4.2 3-2.6 4.2 3.6"/></symbol>
+</svg>
+
+<div class="scroll-bar" aria-hidden="true"></div>
+
+<div class="ambience" aria-hidden="true">
+    <span class="glow glow-a"></span>
+    <span class="glow glow-b"></span>
+</div>
+
+<!-- ============ navigation ============ -->
+<header class="nav">
+    <div class="shell nav-inner">
+        <a class="logo" href="/" aria-label="WealthPay home">
+            <img src="assets/img/wealthpay-lockup-dark.svg" alt="WealthPay" width="165" height="40">
+        </a>
+
+        <nav aria-label="Main">
+            <ul class="nav-links">
+                <li><a href="#solutions">Solutions</a></li>
+                <li><a href="#checkout">Checkout</a></li>
+                <li><a href="#developers">Developers</a></li>
+                <li><a href="#security">Security</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-cta">
+            <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu" id="mobile-menu">
+    <ul>
+        <li><a href="#solutions">Solutions</a></li>
+        <li><a href="#checkout">Checkout</a></li>
+        <li><a href="#developers">Developers</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+    </ul>
+</div>
+
+<main>
+
+<!-- ============ hero ============ -->
+<section class="section hero">
+    <div class="shell hero-grid">
+        <div class="hero-copy">
+            <span class="eyebrow"><i class="dot"></i> One integration, every method</span>
+
+            <h1>
+                <span class="line"><span>Payments that</span></span>
+                <span class="line"><span>clear in <em class="accent" style="font-style:normal">milliseconds</em>,</span></span>
+                <span class="line"><span class="stroke-text">not in days.</span></span>
+            </h1>
+
+            <p class="lead">
+                WealthPay is the payment infrastructure behind fast-growing businesses. Accept cards, digital
+                wallets and local payment methods through a single integration, with intelligent routing,
+                built-in fraud defense and settlement you can actually plan around.
+            </p>
+
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#checkout">See a payment run <svg><use href="#i-arrow"></use></svg></a>
+            </div>
+
+            <div class="hero-note">
+                <span><svg><use href="#i-check"></use></svg> No setup fees</span>
+                <span><svg><use href="#i-check"></use></svg> Go live in 48 hours</span>
+                <span><svg><use href="#i-check"></use></svg> 24/7 human support</span>
+            </div>
+        </div>
+
+        <div class="hero-media" data-reveal="right" data-delay="220">
+            <div class="terminal">
+                <div class="terminal-head">
+                    <strong>Live authorization</strong>
+                    <span class="chip"><i class="dot"></i> Approved</span>
+                </div>
+
+                <div class="terminal-amount">
+                    <small>Captured amount</small>
+                    <strong>$1,284.00</strong>
+                </div>
+
+                <div class="terminal-rows">
+                    <div class="terminal-row"><span>Method</span><b>Credit card · 4 installments</b></div>
+                    <div class="terminal-row"><span>Acquirer routing</span><b>Primary → optimized</b></div>
+                    <div class="terminal-row"><span>Risk score</span><b class="ok">Low · 0.04</b></div>
+                    <div class="terminal-row"><span>Authorization time</span><b>184 ms</b></div>
+                    <div class="terminal-row"><span>Settlement</span><b>D+1</b></div>
+                </div>
+
+                <div class="float-card float-a">
+                    <span class="ico"><svg><use href="#i-chart"></use></svg></span>
+                    <span><small>Approval rate</small><b>98.7%</b></span>
+                </div>
+
+                <div class="float-card float-b">
+                    <span class="ico"><svg><use href="#i-bolt"></use></svg></span>
+                    <span><small>Retry recovered</small><b>+12.4% revenue</b></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ marquee ============ -->
+<div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+        <span class="marquee-item"><svg><use href="#i-card"></use></svg> Card acquiring</span>
+        <span class="marquee-item"><svg><use href="#i-globe"></use></svg> 40+ countries</span>
+        <span class="marquee-item"><svg><use href="#i-repeat"></use></svg> Recurring billing</span>
+        <span class="marquee-item"><svg><use href="#i-split"></use></svg> Split payments</span>
+        <span class="marquee-item"><svg><use href="#i-shield"></use></svg> Anti-fraud</span>
+        <span class="marquee-item"><svg><use href="#i-wallet"></use></svg> Instant payouts</span>
+        <span class="marquee-item"><svg><use href="#i-lock"></use></svg> Tokenization</span>
+        <span class="marquee-item"><svg><use href="#i-card"></use></svg> Card acquiring</span>
+        <span class="marquee-item"><svg><use href="#i-globe"></use></svg> 40+ countries</span>
+        <span class="marquee-item"><svg><use href="#i-repeat"></use></svg> Recurring billing</span>
+        <span class="marquee-item"><svg><use href="#i-split"></use></svg> Split payments</span>
+        <span class="marquee-item"><svg><use href="#i-shield"></use></svg> Anti-fraud</span>
+        <span class="marquee-item"><svg><use href="#i-wallet"></use></svg> Instant payouts</span>
+        <span class="marquee-item"><svg><use href="#i-lock"></use></svg> Tokenization</span>
+    </div>
+</div>
+
+<!-- ============ solutions ============ -->
+<section class="section" id="solutions">
+    <div class="shell">
+        <div class="section-head" data-reveal>
+            <span class="eyebrow"><i class="dot"></i> Solutions</span>
+            <h2 class="h-lg">Everything you need to<br>move money, in one place.</h2>
+            <p class="lead">
+                Acquiring, orchestration, risk and payouts run on the same platform. One contract, one
+                dashboard, one reconciliation file, no matter how many methods you accept.
+            </p>
+        </div>
+
+        <div class="card-grid">
+            <article class="card" data-reveal data-delay="0">
+                <span class="card-ico"><svg><use href="#i-card"></use></svg></span>
+                <h3>Online payments</h3>
+                <p>Credit, debit, wallets, bank transfers and local methods, processed under a single balance.</p>
+                <ul>
+                    <li>Authorization and capture in one call</li>
+                    <li>Installments, pre-authorization and partial capture</li>
+                    <li>Automatic retries on soft declines</li>
+                </ul>
+            </article>
+
+            <article class="card" data-reveal data-delay="80">
+                <span class="card-ico"><svg><use href="#i-layers"></use></svg></span>
+                <h3>Checkout &amp; payment links</h3>
+                <p>Launch a conversion-optimized checkout in minutes, hosted by us or embedded in your product.</p>
+                <ul>
+                    <li>Drop-in components for web and mobile</li>
+                    <li>One-click payments with saved cards</li>
+                    <li>Shareable links and QR codes, no code required</li>
+                </ul>
+            </article>
+
+            <article class="card" data-reveal data-delay="160">
+                <span class="card-ico"><svg><use href="#i-repeat"></use></svg></span>
+                <h3>Subscriptions</h3>
+                <p>Recurring billing with the dunning logic that keeps churn from eating your revenue.</p>
+                <ul>
+                    <li>Plans, trials, upgrades and proration</li>
+                    <li>Smart retry schedules per issuer</li>
+                    <li>Card account updater for expired credentials</li>
+                </ul>
+            </article>
+
+            <article class="card" data-reveal data-delay="0">
+                <span class="card-ico"><svg><use href="#i-split"></use></svg></span>
+                <h3>Split payments</h3>
+                <p>Marketplaces and platforms distribute each transaction automatically at authorization time.</p>
+                <ul>
+                    <li>Percentage or fixed splits per seller</li>
+                    <li>Sub-account onboarding and KYC</li>
+                    <li>Chargeback liability rules you define</li>
+                </ul>
+            </article>
+
+            <article class="card" data-reveal data-delay="80">
+                <span class="card-ico"><svg><use href="#i-shield"></use></svg></span>
+                <h3>Fraud prevention</h3>
+                <p>A risk engine trained on network-wide signals, tuned to your own approval targets.</p>
+                <ul>
+                    <li>Device fingerprinting and behavioral signals</li>
+                    <li>3-D Secure 2 with frictionless flow</li>
+                    <li>Custom rules and manual review queue</li>
+                </ul>
+            </article>
+
+            <article class="card" data-reveal data-delay="160">
+                <span class="card-ico"><svg><use href="#i-wallet"></use></svg></span>
+                <h3>Payouts &amp; settlement</h3>
+                <p>Money reaches your account on a schedule you control, in the currency you need.</p>
+                <ul>
+                    <li>D+1 settlement on eligible volume</li>
+                    <li>Multi-currency balances and FX</li>
+                    <li>Automated reconciliation exports</li>
+                </ul>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ============ checkout simulator ============ -->
+<section class="section" id="checkout">
+    <div class="shell">
+        <div class="section-head is-center" data-reveal>
+            <span class="eyebrow"><i class="dot"></i> Try it</span>
+            <h2 class="h-lg">Watch a payment go through.</h2>
+            <p class="lead">
+                This is a sandbox simulation of the WealthPay authorization flow. Type a card number or pick a
+                brand below, then run the payment and follow every step the transaction takes.
+            </p>
+        </div>
+
+        <div class="sim">
+            <!-- checkout form -->
+            <div class="sim-panel" data-reveal="left">
+                <div class="sim-order">
+                    <span>
+                        <small>Order #WPY-90412</small>
+                        <span class="total">$249.00</span>
+                    </span>
+                    <span class="chip"><i class="dot"></i> Sandbox</span>
+                </div>
+
+                <div class="credit-card">
+                    <div class="cc-top">
+                        <span class="cc-chip"></span>
+                        <span class="cc-brand" id="cc-visual-brand"></span>
+                    </div>
+                    <div class="cc-number" id="cc-visual-number">•••• •••• •••• ••••</div>
+                    <div class="cc-bottom">
+                        <span><small>Card holder</small><b id="cc-visual-name">YOUR NAME HERE</b></span>
+                        <span><small>Expires</small><b id="cc-visual-expiry">MM/YY</b></span>
+                    </div>
+                </div>
+
+                <form id="pay-form" novalidate>
+                    <label class="field">
+                        <span>Card number</span>
+                        <span class="input-wrap">
+                            <input id="cc-number" type="text" inputmode="numeric" autocomplete="cc-number"
+                                   placeholder="4242 4242 4242 4242" value="4242 4242 4242 4242">
+                            <span class="input-brand" id="cc-input-brand" aria-hidden="true"></span>
+                        </span>
+                    </label>
+
+                    <label class="field">
+                        <span>Card holder</span>
+                        <input id="cc-name" type="text" autocomplete="cc-name" placeholder="Alex Moreira">
+                    </label>
+
+                    <div class="field-row">
+                        <label class="field">
+                            <span>Expiry</span>
+                            <input id="cc-expiry" type="text" inputmode="numeric" autocomplete="cc-exp"
+                                   placeholder="MM/YY" maxlength="5">
+                        </label>
+                        <label class="field">
+                            <span>Security code</span>
+                            <input id="cc-cvc" type="text" inputmode="numeric" autocomplete="cc-csc"
+                                   placeholder="123" maxlength="3">
+                        </label>
+                    </div>
+
+                    <button class="btn btn-primary sim-submit" id="pay-submit" type="submit">
+                        <span id="pay-submit-label">Pay $249.00</span>
+                        <svg><use href="#i-arrow"></use></svg>
+                    </button>
+
+                    <p class="sim-secure">
+                        <svg><use href="#i-lock"></use></svg>
+                        Simulation only. No data is transmitted or stored.
+                    </p>
+                </form>
+
+                <div class="brand-rail">
+                    <h4>Pick a brand to autofill a test card</h4>
+                    <div class="brand-grid">
+                        <button class="brand-tile" type="button" data-brand="visa" aria-label="Visa">
+                            <svg viewBox="0 0 80 28"><text x="40" y="21" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="19" font-weight="800" font-style="italic" letter-spacing="1.2">VISA</text></svg>
+                        </button>
+                        <button class="brand-tile" type="button" data-brand="mastercard" aria-label="Mastercard">
+                            <svg viewBox="0 0 80 28"><circle cx="33" cy="14" r="10.5" opacity=".95"></circle><circle cx="47" cy="14" r="9.7" fill="none" stroke="currentColor" stroke-width="1.7" opacity=".9"></circle></svg>
+                        </button>
+                        <button class="brand-tile" type="button" data-brand="amex" aria-label="American Express">
+                            <svg viewBox="0 0 80 28"><rect x="11" y="3.5" width="58" height="21" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.6"></rect><text x="40" y="18.5" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.6">AMEX</text></svg>
+                        </button>
+                        <button class="brand-tile" type="button" data-brand="discover" aria-label="Discover">
+                            <svg viewBox="0 0 80 28"><text x="34" y="18.5" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="10.5" font-weight="700" letter-spacing=".4">DISCOVER</text><circle cx="70" cy="14.5" r="5.2"></circle></svg>
+                        </button>
+                        <button class="brand-tile" type="button" data-brand="elo" aria-label="Elo">
+                            <svg viewBox="0 0 80 28"><text x="36" y="21" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="19" font-weight="800" letter-spacing="-.5">elo</text><circle cx="62" cy="9" r="3.4" opacity=".7"></circle></svg>
+                        </button>
+                        <button class="brand-tile" type="button" data-brand="jcb" aria-label="JCB">
+                            <svg viewBox="0 0 80 28"><rect x="13" y="4" width="17" height="20" rx="3.5" opacity=".95"></rect><rect x="31.5" y="4" width="17" height="20" rx="3.5" opacity=".7"></rect><rect x="50" y="4" width="17" height="20" rx="3.5" opacity=".45"></rect><text x="21.5" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="800" fill="#0c0e0c">J</text><text x="40" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="800" fill="#0c0e0c">C</text><text x="58.5" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="11" font-weight="800" fill="#0c0e0c">B</text></svg>
+                        </button>
+                        <button class="brand-tile" type="button" data-brand="diners" aria-label="Diners Club">
+                            <svg viewBox="0 0 80 28"><circle cx="14" cy="14" r="8.6" opacity=".95"></circle><circle cx="23" cy="14" r="7.9" fill="none" stroke="currentColor" stroke-width="1.6" opacity=".9"></circle><text x="53" y="18" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="9" font-weight="700" letter-spacing=".8">DINERS</text></svg>
+                        </button>
+                        <button class="brand-tile" type="button" data-brand="unionpay" aria-label="UnionPay">
+                            <svg viewBox="0 0 80 28"><text x="40" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" letter-spacing="-.2">UnionPay</text></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- authorization flow -->
+            <div data-reveal="right" data-delay="140">
+                <div class="flow">
+                    <div class="flow-head">
+                        <h3>Authorization pipeline</h3>
+                        <span class="chip"><i class="dot"></i> <span id="flow-status">Idle</span></span>
+                    </div>
+
+                    <ul class="flow-steps">
+                        <li class="flow-step">
+                            <span class="flow-dot"></span>
+                            <span class="flow-label">Encrypting card data<small>AES-256 at the field level</small></span>
+                            <span class="flow-time">--</span>
+                        </li>
+                        <li class="flow-step">
+                            <span class="flow-dot"></span>
+                            <span class="flow-label">Tokenizing credentials<small>Card never touches your servers</small></span>
+                            <span class="flow-time">--</span>
+                        </li>
+                        <li class="flow-step">
+                            <span class="flow-dot"></span>
+                            <span class="flow-label">Scoring risk<small>Device, behavior and network signals</small></span>
+                            <span class="flow-time">--</span>
+                        </li>
+                        <li class="flow-step">
+                            <span class="flow-dot"></span>
+                            <span class="flow-label">Selecting the acquirer<small>Routed by cost and approval odds</small></span>
+                            <span class="flow-time">--</span>
+                        </li>
+                        <li class="flow-step">
+                            <span class="flow-dot"></span>
+                            <span class="flow-label">Requesting authorization<small>Issuer response over the card network</small></span>
+                            <span class="flow-time">--</span>
+                        </li>
+                    </ul>
+
+                    <div class="flow-result" id="flow-result">
+                        <span class="badge"><svg><use href="#i-check"></use></svg></span>
+                        <span>
+                            <b id="flow-result-title">Payment approved</b>
+                            <small id="flow-result-meta">auth code · latency · settlement</small>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="brand-rail" style="margin-top:22px">
+                    <h4>Also available at checkout</h4>
+                    <div class="brand-grid is-wide">
+                        <span class="brand-tile"><svg viewBox="0 0 80 28"><text x="40" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12" font-weight="600">Apple Pay</text></svg></span>
+                        <span class="brand-tile"><svg viewBox="0 0 80 28"><text x="40" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12" font-weight="600">Google Pay</text></svg></span>
+                        <span class="brand-tile"><svg viewBox="0 0 80 28"><text x="40" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12" font-weight="600">PayPal</text></svg></span>
+                        <span class="brand-tile"><svg viewBox="0 0 80 28"><text x="40" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12" font-weight="600">ACH</text></svg></span>
+                        <span class="brand-tile"><svg viewBox="0 0 80 28"><text x="40" y="19" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12" font-weight="600">SEPA</text></svg></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ stats ============ -->
+<section class="section" style="padding-top:0">
+    <div class="shell">
+        <div class="stats" data-reveal>
+            <div class="stat">
+                <b><span data-count="99.99" data-decimals="2">0</span>%</b>
+                <span>Platform uptime over the last 12 months</span>
+            </div>
+            <div class="stat">
+                <b><span data-count="184">0</span>ms</b>
+                <span>Median authorization response time</span>
+            </div>
+            <div class="stat">
+                <b><span data-count="40">0</span>+</b>
+                <span>Countries and 135 settlement currencies</span>
+            </div>
+            <div class="stat">
+                <b>$<span data-count="4.2" data-decimals="1">0</span>B</b>
+                <span>Processed volume through the network</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ how it works ============ -->
+<section class="section" style="padding-top:0">
+    <div class="shell">
+        <div class="section-head" data-reveal>
+            <span class="eyebrow"><i class="dot"></i> How it works</span>
+            <h2 class="h-lg">From click to cash,<br>in four movements.</h2>
+        </div>
+
+        <div class="pipeline">
+            <article class="pipe">
+                <h3>Collect</h3>
+                <p>Your customer pays through our checkout, your own form or a payment link. Credentials are tokenized before they leave the browser.</p>
+            </article>
+            <article class="pipe">
+                <h3>Decide</h3>
+                <p>The risk engine scores the transaction in real time and applies your rules, 3-D Secure only where it earns its friction.</p>
+            </article>
+            <article class="pipe">
+                <h3>Route</h3>
+                <p>We pick the acquirer with the best approval odds and cost for that BIN, and retry elsewhere when a soft decline comes back.</p>
+            </article>
+            <article class="pipe">
+                <h3>Settle</h3>
+                <p>Funds land in your balance with a full audit trail, then move to your bank account on the schedule you choose.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ============ dashboard ============ -->
+<section class="section">
+    <div class="shell split">
+        <div data-reveal="left">
+            <span class="eyebrow"><i class="dot"></i> Dashboard</span>
+            <h2 class="h-lg">Every transaction,<br>explained.</h2>
+            <p class="lead">
+                Stop guessing why a payment failed. WealthPay shows the full lifecycle of each transaction,
+                from the first authorization attempt to the settlement line in your bank statement.
+            </p>
+
+            <ul class="feature-list">
+                <li>
+                    <span class="tick"><svg><use href="#i-check"></use></svg></span>
+                    <span>
+                        <b>Decline intelligence</b>
+                        <p>Group failures by issuer, BIN and reason code, and act on the ones you can actually recover.</p>
+                    </span>
+                </li>
+                <li>
+                    <span class="tick"><svg><use href="#i-check"></use></svg></span>
+                    <span>
+                        <b>Real-time reconciliation</b>
+                        <p>Match payouts to transactions automatically and export to your ERP or accounting stack.</p>
+                    </span>
+                </li>
+                <li>
+                    <span class="tick"><svg><use href="#i-check"></use></svg></span>
+                    <span>
+                        <b>Chargeback workspace</b>
+                        <p>Receive disputes, attach evidence and track the outcome without leaving the dashboard.</p>
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="split-media" data-reveal="right" data-delay="120">
+            <div class="viz viz-ledger" aria-hidden="true">
+                <div class="viz-top">
+                    <span class="viz-title">Settled today</span>
+                    <span class="chip"><i class="dot"></i> Live</span>
+                </div>
+
+                <div class="viz-kpis">
+                    <div class="viz-kpi">
+                        <small>Volume</small>
+                        <b>$<span data-count="248910">0</span></b>
+                    </div>
+                    <div class="viz-kpi">
+                        <small>Approval</small>
+                        <b><span data-count="98.7" data-decimals="1">0</span>%</b>
+                    </div>
+                    <div class="viz-kpi">
+                        <small>Disputes</small>
+                        <b><span data-count="0.04" data-decimals="2">0</span>%</b>
+                    </div>
+                </div>
+
+                <div class="viz-chart">
+                    <span class="viz-bar" style="--h:34%;--d:0.00s"></span>
+                    <span class="viz-bar" style="--h:52%;--d:0.06s"></span>
+                    <span class="viz-bar" style="--h:41%;--d:0.11s"></span>
+                    <span class="viz-bar" style="--h:68%;--d:0.17s"></span>
+                    <span class="viz-bar" style="--h:56%;--d:0.22s"></span>
+                    <span class="viz-bar" style="--h:76%;--d:0.28s"></span>
+                    <span class="viz-bar" style="--h:49%;--d:0.33s"></span>
+                    <span class="viz-bar" style="--h:63%;--d:0.39s"></span>
+                    <span class="viz-bar" style="--h:88%;--d:0.44s"></span>
+                    <span class="viz-bar" style="--h:57%;--d:0.49s"></span>
+                    <span class="viz-bar" style="--h:72%;--d:0.55s"></span>
+                    <span class="viz-bar" style="--h:64%;--d:0.60s"></span>
+                    <span class="viz-bar" style="--h:92%;--d:0.66s"></span>
+                    <span class="viz-bar" style="--h:70%;--d:0.71s"></span>
+                </div>
+
+                <div class="viz-feed">
+                    <ul class="viz-feed-track">
+                        <li><span class="who">Visa ·· 4242</span><span class="amt">$249.00</span><span class="ok">approved</span></li>
+                        <li><span class="who">Mastercard ·· 4444</span><span class="amt">$1,120.00</span><span class="ok">approved</span></li>
+                        <li><span class="who">Apple Pay</span><span class="amt">$79.90</span><span class="ok">approved</span></li>
+                        <li><span class="who">Amex ·· 0005</span><span class="amt">$2,480.00</span><span class="ok">approved</span></li>
+                        <li><span class="who">SEPA transfer</span><span class="amt">$340.00</span><span class="ok">settled</span></li>
+                        <li><span class="who">Visa ·· 1881</span><span class="amt">$59.00</span><span class="ok">approved</span></li>
+                        <li><span class="who">Visa ·· 4242</span><span class="amt">$249.00</span><span class="ok">approved</span></li>
+                        <li><span class="who">Mastercard ·· 4444</span><span class="amt">$1,120.00</span><span class="ok">approved</span></li>
+                        <li><span class="who">Apple Pay</span><span class="amt">$79.90</span><span class="ok">approved</span></li>
+                        <li><span class="who">Amex ·· 0005</span><span class="amt">$2,480.00</span><span class="ok">approved</span></li>
+                        <li><span class="who">SEPA transfer</span><span class="amt">$340.00</span><span class="ok">settled</span></li>
+                        <li><span class="who">Visa ·· 1881</span><span class="amt">$59.00</span><span class="ok">approved</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ developers ============ -->
+<section class="section" id="developers">
+    <div class="shell split is-reverse">
+        <div data-reveal="right">
+            <span class="eyebrow"><i class="dot"></i> Developers</span>
+            <h2 class="h-lg">An API your team<br>will not fight with.</h2>
+            <p class="lead">
+                Predictable REST endpoints, idempotency keys on every write, signed webhooks and SDKs for the
+                languages you already use. Most teams take their first payment on day one.
+            </p>
+
+            <ul class="feature-list">
+                <li>
+                    <span class="tick"><svg><use href="#i-check"></use></svg></span>
+                    <span><b>Sandbox that behaves like production</b><p>Full set of test cards, forced declines, disputes and webhook replays.</p></span>
+                </li>
+                <li>
+                    <span class="tick"><svg><use href="#i-check"></use></svg></span>
+                    <span><b>SDKs and plugins</b><p>Node, Python, PHP, Go, Java, Swift and Kotlin, plus ready-made e-commerce plugins.</p></span>
+                </li>
+                <li>
+                    <span class="tick"><svg><use href="#i-check"></use></svg></span>
+                    <span><b>Versioned and stable</b><p>Breaking changes ship behind a version header, never on a Friday.</p></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="split-media" data-reveal="left" data-delay="120">
+            <div class="code-wrap">
+                <div class="code-tabs">
+                    <button class="code-tab is-active" type="button" data-lang="curl">cURL</button>
+                    <button class="code-tab" type="button" data-lang="node">Node</button>
+                    <button class="code-tab" type="button" data-lang="python">Python</button>
+                    <button class="code-copy" type="button"><svg><use href="#i-copy"></use></svg><span>Copy</span></button>
+                </div>
+
+                <div class="code-body">
+<pre data-lang="curl"><span class="tk-com"># Create and capture a payment</span>
+curl https://api.wealthpay.io/v1/payments \
+  -H <span class="tk-str">"Authorization: Bearer $WEALTHPAY_SECRET_KEY"</span> \
+  -H <span class="tk-str">"Content-Type: application/json"</span> \
+  -H <span class="tk-str">"Idempotency-Key: wpy_90412"</span> \
+  -d '{
+    <span class="tk-key">"amount"</span>: 24900,
+    <span class="tk-key">"currency"</span>: <span class="tk-str">"usd"</span>,
+    <span class="tk-key">"capture"</span>: true,
+    <span class="tk-key">"payment_method"</span>: {
+      <span class="tk-key">"type"</span>: <span class="tk-str">"card"</span>,
+      <span class="tk-key">"token"</span>: <span class="tk-str">"tok_1Nc8y2Kq"</span>
+    },
+    <span class="tk-key">"statement_descriptor"</span>: <span class="tk-str">"WEALTHPAY"</span>
+  }'</pre>
+
+<pre data-lang="node" hidden><span class="tk-key">import</span> WealthPay <span class="tk-key">from</span> <span class="tk-str">"@wealthpay/node"</span>;
+
+<span class="tk-key">const</span> wealthpay = <span class="tk-fn">new WealthPay</span>(process.env.WEALTHPAY_SECRET_KEY);
+
+<span class="tk-key">const</span> payment = <span class="tk-key">await</span> wealthpay.payments.<span class="tk-fn">create</span>({
+  amount: <span class="tk-str">24900</span>,
+  currency: <span class="tk-str">"usd"</span>,
+  capture: <span class="tk-str">true</span>,
+  paymentMethod: { type: <span class="tk-str">"card"</span>, token: <span class="tk-str">"tok_1Nc8y2Kq"</span> },
+  statementDescriptor: <span class="tk-str">"WEALTHPAY"</span>
+}, { idempotencyKey: <span class="tk-str">"wpy_90412"</span> });
+
+console.<span class="tk-fn">log</span>(payment.status); <span class="tk-com">// "approved"</span></pre>
+
+<pre data-lang="python" hidden><span class="tk-key">import</span> wealthpay
+
+client = wealthpay.<span class="tk-fn">Client</span>(api_key=os.environ[<span class="tk-str">"WEALTHPAY_SECRET_KEY"</span>])
+
+payment = client.payments.<span class="tk-fn">create</span>(
+    amount=<span class="tk-str">24900</span>,
+    currency=<span class="tk-str">"usd"</span>,
+    capture=<span class="tk-str">True</span>,
+    payment_method={<span class="tk-str">"type"</span>: <span class="tk-str">"card"</span>, <span class="tk-str">"token"</span>: <span class="tk-str">"tok_1Nc8y2Kq"</span>},
+    statement_descriptor=<span class="tk-str">"WEALTHPAY"</span>,
+    idempotency_key=<span class="tk-str">"wpy_90412"</span>,
+)
+
+<span class="tk-fn">print</span>(payment.status)  <span class="tk-com"># "approved"</span></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ security ============ -->
+<section class="section" id="security">
+    <div class="shell">
+        <div class="section-head" data-reveal>
+            <span class="eyebrow"><i class="dot"></i> Security &amp; compliance</span>
+            <h2 class="h-lg">Built to hold money,<br>and the trust that comes with it.</h2>
+            <p class="lead">
+                Card data is encrypted at the field level, vaulted as tokens and isolated from your systems.
+                Our controls are audited every year and monitored every second.
+            </p>
+        </div>
+
+        <div class="card-grid">
+            <article class="card" data-reveal data-delay="0">
+                <span class="card-ico"><svg><use href="#i-shield"></use></svg></span>
+                <h3>PCI DSS Level 1</h3>
+                <p>The highest certification level in the card industry, reassessed annually by a qualified security assessor.</p>
+            </article>
+            <article class="card" data-reveal data-delay="80">
+                <span class="card-ico"><svg><use href="#i-lock"></use></svg></span>
+                <h3>Tokenization vault</h3>
+                <p>Card numbers are replaced by tokens the moment they are entered, so raw credentials never reach your stack.</p>
+            </article>
+            <article class="card" data-reveal data-delay="160">
+                <span class="card-ico"><svg><use href="#i-layers"></use></svg></span>
+                <h3>3-D Secure 2</h3>
+                <p>Liability shift where it matters, applied selectively so low-risk customers keep a frictionless checkout.</p>
+            </article>
+            <article class="card" data-reveal data-delay="0">
+                <span class="card-ico"><svg><use href="#i-chart"></use></svg></span>
+                <h3>Continuous monitoring</h3>
+                <p>Anomaly detection on volume, velocity and geography, with alerts routed to your team in real time.</p>
+            </article>
+            <article class="card" data-reveal data-delay="80">
+                <span class="card-ico"><svg><use href="#i-globe"></use></svg></span>
+                <h3>Data protection</h3>
+                <p>Privacy controls aligned with GDPR, CCPA and LGPD, including data subject requests and retention schedules.</p>
+            </article>
+            <article class="card" data-reveal data-delay="160">
+                <span class="card-ico"><svg><use href="#i-clock"></use></svg></span>
+                <h3>Resilient by design</h3>
+                <p>Active-active infrastructure across regions, with automatic failover between acquirers and data centers.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ============ segments ============ -->
+<section class="section" style="padding-top:0">
+    <div class="shell split">
+        <div class="split-media" data-reveal="left">
+            <div class="viz viz-flow" aria-hidden="true">
+                <div class="viz-top">
+                    <span class="viz-title">One payment, three models</span>
+                    <span class="chip"><i class="dot"></i> Routing</span>
+                </div>
+                <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <defs>
+                        <path id="fp1" d="M94 130 C 150 130 160 46 236 46" fill="none"></path>
+                        <path id="fp2" d="M94 130 C 150 130 170 130 236 130" fill="none"></path>
+                        <path id="fp3" d="M94 130 C 150 130 160 214 236 214" fill="none"></path>
+                    </defs>
+
+                    <use href="#fp1" stroke="rgba(181,247,37,.3)" stroke-width="1.5" fill="none"></use>
+                    <use href="#fp2" stroke="rgba(181,247,37,.3)" stroke-width="1.5" fill="none"></use>
+                    <use href="#fp3" stroke="rgba(181,247,37,.3)" stroke-width="1.5" fill="none"></use>
+
+                    <circle class="flow-ring" cx="58" cy="130" r="34" fill="none" stroke="#B5F725" stroke-width="1.5"></circle>
+                    <circle cx="58" cy="130" r="34" fill="rgba(181,247,37,.1)" stroke="#B5F725" stroke-width="1.5"></circle>
+                    <text x="58" y="145" text-anchor="middle" fill="#B5F725" font-family="Inter, Helvetica, Arial, sans-serif" font-size="38" font-weight="700">$</text>
+
+                    <g class="flow-chip">
+                        <rect x="236" y="29" width="132" height="34" rx="10" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.16)"></rect>
+                        <text x="302" y="51" text-anchor="middle" fill="#FBFBF7" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600">E-commerce</text>
+                        <rect x="236" y="113" width="132" height="34" rx="10" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.16)"></rect>
+                        <text x="302" y="135" text-anchor="middle" fill="#FBFBF7" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600">Subscriptions</text>
+                        <rect x="236" y="197" width="132" height="34" rx="10" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.16)"></rect>
+                        <text x="302" y="219" text-anchor="middle" fill="#FBFBF7" font-family="Inter, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600">Marketplaces</text>
+                    </g>
+
+                    <circle class="flow-dot" r="4.5" fill="#B5F725">
+                        <animateMotion dur="2.6s" begin="0s" repeatCount="indefinite"><mpath href="#fp1" xlink:href="#fp1"></mpath></animateMotion>
+                    </circle>
+                    <circle class="flow-dot" r="4.5" fill="#B5F725">
+                        <animateMotion dur="3s" begin="0.55s" repeatCount="indefinite"><mpath href="#fp2" xlink:href="#fp2"></mpath></animateMotion>
+                    </circle>
+                    <circle class="flow-dot" r="4.5" fill="#B5F725">
+                        <animateMotion dur="2.8s" begin="1.1s" repeatCount="indefinite"><mpath href="#fp3" xlink:href="#fp3"></mpath></animateMotion>
+                    </circle>
+                </svg>
+                <p class="viz-note">Same balance, same reconciliation file.</p>
+            </div>
+        </div>
+
+        <div data-reveal="right" data-delay="120">
+            <span class="eyebrow"><i class="dot"></i> Who we serve</span>
+            <h2 class="h-lg">One platform,<br>many business models.</h2>
+            <p class="lead">
+                Whether you sell once or bill every month, the same infrastructure adapts to how your revenue
+                actually behaves.
+            </p>
+
+            <ul class="feature-list">
+                <li><span class="tick"><svg><use href="#i-check"></use></svg></span><span><b>E-commerce and retail</b><p>High-volume card acquiring with installments, one-click and abandoned-cart recovery.</p></span></li>
+                <li><span class="tick"><svg><use href="#i-check"></use></svg></span><span><b>SaaS and digital products</b><p>Subscriptions, usage-based billing, invoices and global tax-ready receipts.</p></span></li>
+                <li><span class="tick"><svg><use href="#i-check"></use></svg></span><span><b>Marketplaces and platforms</b><p>Seller onboarding, split settlement and payouts on your own schedule.</p></span></li>
+                <li><span class="tick"><svg><use href="#i-check"></use></svg></span><span><b>Services and education</b><p>Payment links, recurring plans and reconciliation for teams without engineers.</p></span></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ============ faq ============ -->
+<section class="section" id="faq">
+    <div class="shell">
+        <div class="section-head is-center" data-reveal>
+            <span class="eyebrow"><i class="dot"></i> FAQ</span>
+            <h2 class="h-lg">Questions we hear<br>before every integration.</h2>
+        </div>
+
+        <div class="faq" data-reveal>
+            <div class="faq-item">
+                <button class="faq-q" type="button" aria-expanded="false">How long does it take to go live?<span class="faq-sign"></span></button>
+                <div class="faq-a"><p>Most merchants complete onboarding and start processing within 48 hours. Technical integration is usually a single afternoon with our SDKs, and we run the first transactions with you in sandbox before enabling production keys.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" type="button" aria-expanded="false">Which payment methods can I accept?<span class="faq-sign"></span></button>
+                <div class="faq-a"><p>Credit and debit cards from the major networks, digital wallets such as Apple Pay and Google Pay, bank transfers, instant payment rails and the local methods your customers expect in each market. Every method settles into the same balance.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" type="button" aria-expanded="false">When is the money settled?<span class="faq-sign"></span></button>
+                <div class="faq-a"><p>Eligible card volume settles on D+1. Other methods follow the schedule of the underlying rail, and you can configure automatic transfers to your bank account daily, weekly or on demand.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" type="button" aria-expanded="false">Do I need to be PCI compliant?<span class="faq-sign"></span></button>
+                <div class="faq-a"><p>If you use our hosted checkout or drop-in components, card data never touches your servers, which keeps your scope at the lightest self-assessment level. If you collect card data directly, we help you map the requirements that apply.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" type="button" aria-expanded="false">How does pricing work?<span class="faq-sign"></span></button>
+                <div class="faq-a"><p>Pricing is per successful transaction, with no setup fee and no monthly minimum. Rates depend on your volume, method mix and risk profile, and we quote them in writing before you sign anything.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" type="button" aria-expanded="false">What happens when a customer disputes a charge?<span class="faq-sign"></span></button>
+                <div class="faq-a"><p>You are notified the moment the dispute is opened, with the reason code and the deadline. Evidence is submitted from the dashboard or by API, and the case is tracked to its outcome without you contacting the acquirer directly.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- ============ footer ============ -->
+<footer class="footer">
+    <div class="shell">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a class="logo" href="/" aria-label="WealthPay home">
+                    <img src="assets/img/wealthpay-lockup-dark.svg" alt="WealthPay" width="165" height="40">
+                </a>
+                <p>Payment infrastructure for businesses that need approvals, not excuses.</p>
+            </div>
+
+            <div>
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#solutions">Online payments</a></li>
+                    <li><a href="#checkout">Checkout</a></li>
+                    <li><a href="#solutions">Subscriptions</a></li>
+                    <li><a href="#solutions">Split payments</a></li>
+                    <li><a href="#solutions">Payouts</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>Developers</h4>
+                <ul>
+                    <li><a href="#developers">API reference</a></li>
+                    <li><a href="#developers">SDKs</a></li>
+                    <li><a href="#developers">Sandbox</a></li>
+                    <li><a href="#developers">Webhooks</a></li>
+                    <li><a href="#security">Status</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#security">Security</a></li>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="footer-disclaimer">
+            WealthPay is a payment technology provider. Card processing, acquiring and settlement services are
+            provided through licensed financial institutions and acquiring partners. Approval rates,
+            settlement windows and pricing depend on your business profile, volume and the results of our
+            underwriting review. Figures shown on this page are illustrative of platform performance and do
+            not constitute a guarantee of results.
+        </p>
+
+        <div class="footer-base">
+            <span>&copy; <span data-year>2026</span> WealthPay. All rights reserved.</span>
+            <nav>
+                <a href="/privacy">Privacy Policy</a>
+            </nav>
+        </div>
+    </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
